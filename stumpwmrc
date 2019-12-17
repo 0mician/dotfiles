@@ -1,0 +1,42 @@
+(in-package :stumpwm)
+
+(defcommand urxvt () ()(run-or-raise "urxvt" '(:instance "urxvt")))
+(define-key *root-map* (kbd "c") "urxvt")
+
+(setf *timeout-wait* 5)
+(set-msg-border-width 1)
+
+(setf *window-border-style* :thin)
+(setf *maxsize-border-width* 1)
+(setf *transient-border-width* 1)
+(setf *normal-border-width* 1)
+(set-bg-color "black")
+(set-fg-color "gray30")
+(set-focus-color "gray60")
+(set-unfocus-color "gray30")
+(setf *mouse-focus-policy* :sloppy)
+(stumpwm:run-shell-command "xsetroot -cursor_name left_ptr")
+(stumpwm:set-fg-color "white")
+(stumpwm:set-bg-color "black")
+
+;; contribs
+(load-module "kbd-layouts")
+(load-module "end-session")
+;(load-module "power")
+;(power:start-laptop-lid-watcher)
+
+;;modeline
+(setf *mode-line-timeout* 1) ; must be set *before* turning on the modeline
+(setf *mode-line-position* :top)
+
+(setf *screen-mode-line-format*
+      (list '( (:eval (run-shell-command "date '+%R, %F %a'|tr -d [:cntrl:]" t)) " %c | %b | [^B%n^b] %W |")))
+;; Enable scrolling in GTK applications
+(setf (getenv "GDK_CORE_DEVICE_EVENTS") "1")
+
+;; Shortcut to lock the screen
+;(defcommand lock-screen () ()
+;  "lock the screen"
+;  ("exec gnome-screensaver-command -l"))
+(define-key *root-map* (kbd "C-z") "exec gnome-screensaver-command -l")
+;(define-key *root-map* (kbd "L") "lock-screen")
